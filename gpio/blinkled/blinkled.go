@@ -1,6 +1,7 @@
 /*
 blink led
 
+platform: RaspberryPi2
 output: GPIO21
 stop: Ctrl-C
 */

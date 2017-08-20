@@ -1,1 +1,1 @@
-# go snippet
+# golang snippet
