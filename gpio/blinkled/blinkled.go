@@ -26,35 +26,25 @@ func main() {
 		os.Exit(1)
 	}
 
-	stop_chan := make(chan bool, 1)
-
-	signal_chan := make(chan os.Signal, 1)
-	signal.Notify(signal_chan, syscall.SIGINT)
-
-	go func() {
-		s := <-signal_chan
-		switch s {
-		case syscall.SIGINT:
-			fmt.Println("SIGINT")
-			stop_chan <- true
-		}
-	}()
-
 	pin := rpio.Pin(21)
-
 	pin.Output()
 
-LOOP:
-	for {
+	ch := make(chan os.Signal, 1)
+	signal.Notify(ch, syscall.SIGINT)
+	loop := true
+
+	for loop {
 		select {
-		case stop := <-stop_chan:
-			if stop {
-				break LOOP
+		case s := <-ch:
+			fmt.Printf("signal receive: %v\n", s)
+			if s == syscall.SIGINT {
+				loop = false
+				pin.Low()
 			}
 		default:
 			pin.Toggle()
+			time.Sleep(1 * time.Second)
 		}
-		time.Sleep(1 * time.Second)
 	}
 
 	rpio.Close()
