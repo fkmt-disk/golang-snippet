@@ -12,8 +12,9 @@ func main() {
 	url := "http://localhost:9090/test"
 
 	data := map[string]string{
-		"username": "alfa",
-		"password": "alfa!",
+		"foo": "hoge",
+		"bar": "fuga",
+		"qux": "piyo",
 	}
 
 	jsonData, _ := json.Marshal(data)
